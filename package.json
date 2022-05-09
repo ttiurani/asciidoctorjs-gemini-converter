@@ -1,0 +1,38 @@
+{
+    "name": "asciidoctorjs-gemini-converter",
+    "version": "0.0.1",
+    "description": "Gemini converter for Asciidoctor.js",
+    "licence": "AGPL-3.0",
+    "main": "src/index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ttiurani/asciidoctorjs-gemini-converter.git"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "asciidoc",
+        "asciidoctor",
+        "javascript",
+        "library",
+        "converter",
+        "gemini"
+    ],
+    "bugs": {
+        "url": "https://github.com/ttiurani/asciidoctorjs-gemini-converter/issues"
+    },
+    "homepage": "https://github.com/ttiurani/asciidoctorjs-gemini-converter",
+    "scripts": {
+        "build": "prettier --ignore-path .gitignore --write --plugin-search-dir=. . && eslint --ignore-path .gitignore ."
+    },
+    "devDependencies": {
+        "@asciidoctor/core": "^2.2.6",
+        "eslint": "^7.32.0",
+        "eslint-config-prettier": "^8.3.0",
+        "prettier": "^2.5.1"
+    },
+    "peerDependencies": {
+        "@asciidoctor/core": "^2.2.6"
+    }
+}
