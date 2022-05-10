@@ -10,11 +10,10 @@ function GeminiConverter(Asciidoctor) {
         }
 
         $convert(node, transform = null, _opts = {}) {
-            const operation = transforms[transform || node.node_name];
-
+            const operation = transforms[transform || node.getNodeName()];
             if (!operation) {
                 throw new Error(
-                    `${operation} operation does not exist. (${transform}, ${node.node_name}, ${node.context})`
+                    `Operation not supported. (${transform}, ${node.getNodeName()}, ${node.getContext()})`
                 );
             }
 
