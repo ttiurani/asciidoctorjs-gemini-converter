@@ -1,11 +1,11 @@
 'use strict';
 
-const SUPERSCRIPT_DIGITS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
-const SUPERSCRIPT_LETTERS = "ᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖ";
+const SUPERSCRIPT_DIGITS = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+const SUPERSCRIPT_LETTERS = 'ᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖ';
 
 const getDocAttr = (node, key) => {
-   return node.getDocument().getAttributes()[key];
-}
+    return node.getDocument().getAttributes()[key];
+};
 
 module.exports = {
     paragraph: ({ node }) => {
@@ -21,9 +21,9 @@ module.exports = {
     },
 
     document: ({ node }) => {
-        let title = `# ${node.getTitle()}\n`;
+        const title = `# ${node.getTitle()}\n`;
         const date = node.getRevdate();
-        let byline = ''
+        let byline = '';
         if (date && date.length) {
             byline += date;
         }
@@ -56,7 +56,6 @@ module.exports = {
                 meta += keywordsPrefix + ' ';
             }
             meta += keywords;
-
         }
         if (meta.length) {
             meta += '\n';
@@ -74,58 +73,58 @@ module.exports = {
         const footnotes = node.getAttributes()['_footnotes'];
         let footnotesAppendix = '';
         if (footnotes.length) {
-            footnotesAppendix += '\n'
+            footnotesAppendix += '\n';
             const footnotesHeading = getDocAttr(node, 'footnotes-heading');
             if (footnotesHeading && footnotesHeading.length) {
-               footnotesAppendix += '## ' + footnotesHeading + '\n';
+                footnotesAppendix += '## ' + footnotesHeading + '\n';
             }
             footnotes.forEach((footnote) => {
-                footnotesAppendix += footnote + '\n'
-            })
+                footnotesAppendix += footnote + '\n';
+            });
         }
 
         const links = node.getAttributes()['_links'];
         let linksAppendix = '';
         if (links.length) {
-            linksAppendix += '\n'
+            linksAppendix += '\n';
             const linksHeading = getDocAttr(node, 'links-heading');
             if (linksHeading && linksHeading.length) {
-               linksAppendix += '## ' + linksHeading + '\n';
+                linksAppendix += '## ' + linksHeading + '\n';
             }
             links.forEach((link) => {
-                linksAppendix += link + '\n'
-            })
+                linksAppendix += link + '\n';
+            });
         }
 
         return title + byline + meta + '\n' + content + footnotesAppendix + linksAppendix;
     },
 
     section: ({ node }) => {
-        return `${"#".repeat(node.getLevel()+1)} ${node.getTitle()}\n${node.getContent()}`;
+        return `${'#'.repeat(node.getLevel() + 1)} ${node.getTitle()}\n${node.getContent()}`;
     },
 
     inline_quoted: ({ node }) => {
-        if (node.getType() === "strong") {
-            return `*${node.getText()}*`
-        } else if (node.getType() === "emphasis") {
-            return `_${node.getText()}_`
+        if (node.getType() === 'strong') {
+            return `*${node.getText()}*`;
+        } else if (node.getType() === 'emphasis') {
+            return `_${node.getText()}_`;
         }
 
         return node.getText();
     },
 
     inline_anchor: ({ node }) => {
-        if (node.getRole() === "bare") {
+        if (node.getRole() === 'bare') {
             // For links that are standalone in the text, just print them on their own line in between the text
-            return "\n=> " + node.getTarget() + "\n"
+            return '\n=> ' + node.getTarget() + '\n';
         }
         const storedLinks = getDocAttr(node, '_links');
         const anchorChar = SUPERSCRIPT_LETTERS.charAt(storedLinks.length);
         const title = node.getAttributes()['title'];
         const text = node.getText();
-        const linkDescription = (title && title.length) ? title : text;
+        const linkDescription = title && title.length ? title : text;
         const link = `=> ${node.getTarget()} ${anchorChar} ${linkDescription}`;
-        storedLinks.push(link)
+        storedLinks.push(link);
         return text + anchorChar;
     },
 
@@ -133,18 +132,18 @@ module.exports = {
         const storedFootnotes = getDocAttr(node, '_footnotes');
         const anchorChar = SUPERSCRIPT_DIGITS.charAt(storedFootnotes.length + 1);
         const text = node.getText();
-        storedFootnotes.push(anchorChar + ' ' + text)
+        storedFootnotes.push(anchorChar + ' ' + text);
         return anchorChar;
     },
     ulist: ({ node }) => {
-        let list = "";
+        let list = '';
         node.getBlocks().forEach((value) => {
-           list += `* ${value.getText()}\n`
-        })
+            list += `* ${value.getText()}\n`;
+        });
         return list;
     },
 
-    image:  ({ node }) => {
+    image: ({ node }) => {
         const title = node.getTitle();
         const alt = node.getAttributes()['alt'];
 
@@ -160,8 +159,7 @@ module.exports = {
             target = imageBaseUrl + target;
         }
         return `=> ${target} ${title || alt}`;
-    }
-
+    },
 
     /*
     document
@@ -238,5 +236,4 @@ module.exports = {
 
     inline_quoted
     */
-
 };
