@@ -161,6 +161,30 @@ module.exports = {
         return `=> ${target} ${title || alt}`;
     },
 
+    quote: ({ node }) => {
+        // Support only flat quotes, remove line breaks
+        let content = node.getContent().replace(/(\r\n|\n|\r)/gm, '');
+
+        let byline = '';
+        const attribution = node.getAttributes()['attribution'];
+        if (attribution && attribution.length) {
+            byline += ' -- ' + attribution;
+        }
+
+        const citetitle = node.getAttributes()['citetitle'];
+        if (citetitle && citetitle.length) {
+            if (byline.length) {
+                byline += ', ';
+            } else {
+              byline += ' -- ';
+            }
+            byline += citetitle;
+        }
+
+        return '> ' + content + byline;
+    },
+
+
     /*
     document
 
