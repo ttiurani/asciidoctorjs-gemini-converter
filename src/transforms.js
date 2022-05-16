@@ -70,19 +70,6 @@ module.exports = {
 
         // This is executed last
 
-        const footnotes = node.getAttributes()['_footnotes'];
-        let footnotesAppendix = '';
-        if (footnotes.length) {
-            footnotesAppendix += '\n';
-            const footnotesHeading = getDocAttr(node, 'footnotes-heading');
-            if (footnotesHeading && footnotesHeading.length) {
-                footnotesAppendix += '## ' + footnotesHeading + '\n';
-            }
-            footnotes.forEach((footnote) => {
-                footnotesAppendix += footnote + '\n';
-            });
-        }
-
         const links = node.getAttributes()['_links'];
         let linksAppendix = '';
         if (links.length) {
@@ -96,7 +83,21 @@ module.exports = {
             });
         }
 
-        return title + byline + meta + '\n' + content + footnotesAppendix + linksAppendix;
+        const footnotes = node.getAttributes()['_footnotes'];
+        let footnotesAppendix = '';
+        if (footnotes.length) {
+            footnotesAppendix += '\n';
+            const footnotesHeading = getDocAttr(node, 'footnotes-heading');
+            if (footnotesHeading && footnotesHeading.length) {
+                footnotesAppendix += '## ' + footnotesHeading + '\n';
+            }
+            footnotes.forEach((footnote) => {
+                footnotesAppendix += footnote + '\n';
+            });
+        }
+        const appendix = linksAppendix.length || footnotesAppendix.length ? '\n' + linksAppendix + footnotesAppendix : '';
+
+        return title + byline + meta + '\n' + content + appendix;
     },
 
     section: ({ node }) => {
@@ -137,8 +138,11 @@ module.exports = {
     },
     ulist: ({ node }) => {
         let list = '';
-        node.getBlocks().forEach((value) => {
-            list += `* ${value.getText()}\n`;
+        node.getBlocks().forEach((value, index, arr) => {
+            list += `* ${value.getText()}`;
+            if (index < arr.length-1) {
+                list += '\n';
+            }
         });
         return list;
     },
