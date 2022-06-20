@@ -9,7 +9,8 @@ const getDocAttr = (node, key) => {
 
 module.exports = {
     paragraph: ({ node }) => {
-        return `${node.getContent()}`;
+        // In gemtext a single line is one paragraph so remove all line breaks.
+        return node.getContent().replaceAll(/\n/g,' ');
     },
 
     preamble: ({ node }) => {
