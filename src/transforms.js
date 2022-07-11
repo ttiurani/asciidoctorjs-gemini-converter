@@ -7,6 +7,10 @@ const getDocAttr = (node, key) => {
     return node.getDocument().getAttributes()[key];
 };
 
+const removeEscapes = (text) => {
+    return text.replaceAll(/&#8217;/g, '’');
+}
+
 module.exports = {
     paragraph: ({ node }) => {
         // In gemtext a single line is one paragraph so remove all line breaks.
@@ -22,7 +26,7 @@ module.exports = {
     },
 
     document: ({ node }) => {
-        const title = `# ${node.getTitle()}\n`;
+        const title = `# ${removeEscapes(node.getTitle())}\n`;
         const date = node.getRevdate();
         let byline = '';
         if (date && date.length) {
@@ -67,7 +71,7 @@ module.exports = {
 
         // Calling getContent triggers all the other callbacks
 
-        const content = node.getContent();
+        const content = removeEscapes(node.getContent());
 
         // This is executed last
 
@@ -80,7 +84,7 @@ module.exports = {
                 linksAppendix += '## ' + linksHeading + '\n';
             }
             links.forEach((link) => {
-                linksAppendix += link + '\n';
+                linksAppendix += removeEscapes(link) + '\n';
             });
         }
 
@@ -93,7 +97,7 @@ module.exports = {
                 footnotesAppendix += '## ' + footnotesHeading + '\n';
             }
             footnotes.forEach((footnote) => {
-                footnotesAppendix += footnote + '\n';
+                footnotesAppendix += removeEscapes(footnote) + '\n';
             });
         }
         const appendix = linksAppendix.length || footnotesAppendix.length ? '\n' + linksAppendix + footnotesAppendix : '';
@@ -116,6 +120,10 @@ module.exports = {
     },
 
     inline_anchor: ({ node }) => {
+        if (node.getTarget().startsWith("#")) {
+            // Skip anchor links
+            return node.getText();
+        }
         if (node.getRole() === 'bare') {
             // For links that are standalone in the text, just print them on their own line in between the text
             return '\n=> ' + node.getTarget() + '\n';
