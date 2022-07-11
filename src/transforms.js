@@ -11,6 +11,16 @@ const removeEscapes = (text) => {
     return text.replaceAll(/&#8217;/g, '’');
 }
 
+const getDigitAnchor = (number) => {
+    if (number > 10) {
+        const numberAsString = '' + number;
+        const firstNumber = Number(numberAsString.charAt(0));
+        const secondNumber = Number(numberAsString.charAt(1));
+        return SUPERSCRIPT_DIGITS.charAt(firstNumber) + SUPERSCRIPT_DIGITS.charAt(secondNumber);
+    }
+    return SUPERSCRIPT_DIGITS.charAt(number);
+}
+
 module.exports = {
     paragraph: ({ node }) => {
         // In gemtext a single line is one paragraph so remove all line breaks.
@@ -129,7 +139,7 @@ module.exports = {
             return '\n=> ' + node.getTarget() + '\n';
         }
         const storedLinks = getDocAttr(node, '_links');
-        const anchorChar = SUPERSCRIPT_LETTERS.charAt(storedLinks.length);
+        const anchorChar = getDigitAnchor(storedLinks.length + 1);
         const title = node.getAttributes()['title'];
         const text = node.getText();
         const linkDescription = title && title.length ? title : text;
@@ -140,7 +150,7 @@ module.exports = {
 
     inline_footnote: ({ node }) => {
         const storedFootnotes = getDocAttr(node, '_footnotes');
-        const anchorChar = SUPERSCRIPT_DIGITS.charAt(storedFootnotes.length + 1);
+        const anchorChar = SUPERSCRIPT_LETTERS.charAt(storedFootnotes.length);
         const text = node.getText();
         storedFootnotes.push(anchorChar + ' ' + text);
         return anchorChar;
