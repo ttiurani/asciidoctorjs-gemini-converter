@@ -12,7 +12,7 @@ const removeEscapes = (text) => {
 }
 
 const getDigitAnchor = (number) => {
-    if (number > 10) {
+    if (number >= 10) {
         const numberAsString = '' + number;
         const firstNumber = Number(numberAsString.charAt(0));
         const secondNumber = Number(numberAsString.charAt(1));
