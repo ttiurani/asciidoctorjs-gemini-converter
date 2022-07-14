@@ -24,7 +24,8 @@ const getDigitAnchor = (number) => {
 module.exports = {
     paragraph: ({ node }) => {
         // In gemtext a single line is one paragraph so remove all line breaks.
-        return node.getContent().replaceAll(/\n/g,' ');
+        // Add an extra line break to the end of each paragraph as that's apparently what most clients expect.
+        return node.getContent().replaceAll(/\n/g,' ') + '\n';
     },
 
     preamble: ({ node }) => {
