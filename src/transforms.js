@@ -164,7 +164,7 @@ module.exports = {
                 list += '\n';
             }
         });
-        return list;
+        return list += '\n';
     },
 
     image: ({ node }) => {
@@ -182,7 +182,7 @@ module.exports = {
             }
             target = imageBaseUrl + target;
         }
-        return `=> ${target} ${title || alt}`;
+        return `=> ${target} ${title || alt}\n`;
     },
 
     quote: ({ node }) => {
@@ -205,7 +205,7 @@ module.exports = {
             byline += citetitle;
         }
 
-        return '> ' + content + byline;
+        return '> ' + content + byline + '\n';
     },
 
 
