@@ -173,12 +173,10 @@ module.exports = {
 
         let target = node.getAttributes()['target'];
         if (target.startsWith('/')) {
-            // Relative url, expect a base url
-            const imageBaseUrl = getDocAttr(node, 'image-base-url');
+            // Relative url, might need a base url
+            let imageBaseUrl = getDocAttr(node, 'image-base-url');
             if (!imageBaseUrl) {
-                throw new Error(
-                    `Image has relative url ${target} but no 'image-base-url' attribute provided`
-                );
+                imageBaseUrl = '';
             }
             target = imageBaseUrl + target;
         }
