@@ -37,7 +37,14 @@ module.exports = {
     },
 
     document: ({ node }) => {
-        const title = `# ${removeEscapes(node.getTitle())}\n`;
+        const titleSeparator = (node.getAttributes()['title-separator'] || ':') + ' ';
+        const unformattedDoctitle = node.getTitle();
+        const subtitleIndex = unformattedDoctitle.lastIndexOf(titleSeparator);
+        let doctitle = unformattedDoctitle;
+        if (subtitleIndex > 0) {
+            doctitle = unformattedDoctitle.substring(0, subtitleIndex) + ' (' + unformattedDoctitle.substring(subtitleIndex + titleSeparator.length) + ')';
+        }
+        const title = `# ${removeEscapes(doctitle)}\n`;
         const date = node.getRevdate();
         let byline = '';
         if (date && date.length) {
