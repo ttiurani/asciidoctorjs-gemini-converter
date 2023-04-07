@@ -213,6 +213,13 @@ module.exports = {
         return '> ' + content + byline + '\n';
     },
 
+    literal: ({ node }) => {
+        let content = '';
+        for (const line of node.lines) {
+            content += line + '\n';
+        }
+        return  '```\n' + content + '```\n';
+    }
 
     /*
     document
