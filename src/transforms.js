@@ -93,6 +93,19 @@ module.exports = {
 
         // This is executed last
 
+        const footnotes = node.getAttributes()['_footnotes'];
+        let footnotesAppendix = '';
+        if (footnotes.length) {
+            footnotesAppendix += '\n';
+            const footnotesHeading = getDocAttr(node, 'footnotes-heading');
+            if (footnotesHeading && footnotesHeading.length) {
+                footnotesAppendix += '## ' + footnotesHeading + '\n';
+            }
+            footnotes.forEach((footnote) => {
+                footnotesAppendix += removeEscapes(footnote) + '\n';
+            });
+        }
+
         const links = node.getAttributes()['_links'];
         let linksAppendix = '';
         if (links.length) {
@@ -106,19 +119,7 @@ module.exports = {
             });
         }
 
-        const footnotes = node.getAttributes()['_footnotes'];
-        let footnotesAppendix = '';
-        if (footnotes.length) {
-            footnotesAppendix += '\n';
-            const footnotesHeading = getDocAttr(node, 'footnotes-heading');
-            if (footnotesHeading && footnotesHeading.length) {
-                footnotesAppendix += '## ' + footnotesHeading + '\n';
-            }
-            footnotes.forEach((footnote) => {
-                footnotesAppendix += removeEscapes(footnote) + '\n';
-            });
-        }
-        const appendix = linksAppendix.length || footnotesAppendix.length ? '\n' + linksAppendix + footnotesAppendix : '';
+        const appendix = footnotesAppendix.length || linksAppendix.length ? '\n' + footnotesAppendix + linksAppendix : '';
 
         return title + byline + meta + '\n' + content + appendix;
     },
